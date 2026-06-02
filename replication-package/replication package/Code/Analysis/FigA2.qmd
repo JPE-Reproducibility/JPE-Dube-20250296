@@ -1,0 +1,87 @@
+---
+# ============================================================================
+# FigA2.qmd
+#
+# Produces Appendix Figure A2: Cell Tower Locations in Afghanistan.
+#   NOTE: Uses synthetic tower coordinates — output is not meaningful.
+#   The confidential antenna geolocation file cannot be shared.
+#
+# Input:  Data/figures_data/country_shp/gadm36_AFG_0.shp
+#         Data/figures_data/district_shp/district398.shp
+#         Data/figures_data/synthetic/cell_lookup_antenna_synthetic.csv
+# Output: Output/Figures/FigA2_cell_towers_in_afg.pdf
+#
+# Required packages: tidyverse, sf, this.path
+# To install:  install.packages(c("tidyverse", "sf", "this.path"))
+#
+# USAGE: Update maindir in the setup chunk to the root of your local copy
+#        of the replication package before running.
+# ============================================================================
+---
+
+# Tower Locations {.unnumbered}
+
+```{r setup, include = FALSE}
+
+rm(list = ls())
+
+# Load Packages
+if (!require(pacman)) install.packages('pacman', repos = 'https://cran.rstudio.com')
+pacman::p_load(tidyverse, haven, data.table, sf, lubridate, stars, this.path, geosphere, fastcluster, kableExtra, ncmeta)
+
+# Setting directory
+maindir <- "<PATH_TO_REPLICATION_PACKAGE>" 
+
+# File Paths
+paths = list(
+  'shp_cntry' = file.path(maindir, 'Data/figures_data/country_shp/gadm36_AFG_0.shp'),
+  'shp_districts' = file.path(maindir, 'Data/figures_data/district_shp/district398.shp'),
+  'tower_file' = file.path(maindir, 'Data/figures_data/synthetic/cell_lookup_antenna_synthetic.csv')
+)
+
+crs_unproj = 4326
+crs_proj = 24313
+
+```
+
+```{r, include=FALSE}
+
+#-----------------------------  Country Boundary -----------------------------#
+
+# Get Afghanistan country boundary
+geodf_cntry = read_sf(paths[['shp_cntry']]) |>
+  st_transform(crs_proj)
+
+#----------------------------   District Geometry    -------------------------#
+
+# Get Afghanistan districts
+geodf_districts = read_sf(paths[['shp_districts']]) |>
+  st_transform(crs_proj) |>
+  # tidy columns
+  rename(provinceName = PROV_34_NA,
+         districtName = DIST_34_NA,
+         distid = DISTID,
+         provid = PROVID) |>
+  dplyr::select(-OBJECTID)
+
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+# 1739 towers
+geodf_tower = read_csv(paths$tower_file) |>
+  rename(lng_tower = longitude,
+         lat_tower = latitude) |>
+  st_as_sf(coords = c('lng_tower','lat_tower'), crs = crs_unproj, remove = F) |>
+  st_transform(crs_proj)
+
+ggplot() +
+  geom_sf(data = geodf_tower, colour = 'midnightblue', size = 1, alpha = 0.6) +
+  geom_sf(data = geodf_districts, fill = NA, colour = 'gray80', size = 0.2) +
+  geom_sf(data = geodf_cntry, fill = NA, colour = 'black', size = 1) +
+  theme_minimal() 
+
+ggsave(filename = file.path(maindir, 'Output/Figures/FigA2_cell_towers_in_afg.pdf'),
+       plot = last_plot())
+  
+```
