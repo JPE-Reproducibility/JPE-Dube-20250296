@@ -1,6 +1,11 @@
-title: "Stand-in title"
-author: "Dr Prof James 'JayJay' Author"
-paper_id: 12345678
+title: "Measuring Religion from Behavior: Violence, Climate Shocks and Religious Adherence in Afghanistan"
+author: "Dube"
 round: 1
-repo: "https://www.github.com/standin"
-dropbox_rel_path: "JPE/Author-12345678/1"
+repo: "https://github.com/JPE-Reproducibility/JPE-Dube-20250296"
+paper_id: 20250296
+journal: "JPE"
+paper_slug: "Dube-20250296"
+dropbox_rel_path: "JPE/Dube-20250296/1"
+package_size_gb: 0.01
+package_max_file_size_gb: 2
+package_max_pkg_size_gb: 10
