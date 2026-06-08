@@ -69,20 +69,18 @@ In assessing compliance with our [Data and Code Availability Policy](https://www
 > {REPLICATOR} Check off the following sections/elements that you find in either the README provided by the authors, or in the authors' online appendix (rare).
 
 - [ ] Data Availability and Provenance Statements
-  - [ ] Statement about Rights - Part 1: Right to use the data (e.g. *did the authors lawfully obtain the data*)
-  - [ ] Statement about Rights - Part 2: Right to publish the data (e.g. *are human subjects involved and did permission been granted to publish their data?*)
+  - [x] Statement about Rights - Part 1: Right to use the data (e.g. *did the authors lawfully obtain the data*)
+  - [x] Statement about Rights - Part 2: Right to publish the data (e.g. *are human subjects involved and did permission been granted to publish their data?*)
   - [ ] License for Data (optional, but recommended)
-  - [ ] Details on each Data Source
-- [ ] Dataset list
-- [ ] Computational requirements
-  - [ ] Software Requirements
+  - [x] Details on each Data Source
+- [x] Dataset list
+- [x] Computational requirements
+  - [x] Software Requirements
   - [ ] Controlled Randomness (as necessary)
-  - [ ] Memory, Runtime, and Storage Requirements
+  - [x] Memory, Runtime, and Storage Requirements
 - [ ] Description of programs/code
   - [ ] License for Code (Optional, but recommended) 
-- [ ] {REPLICATOR} to Replicators
-  - [ ] Details (as necessary)
-- [ ] List of tables and programs
+- [x] List of tables and programs
 - [ ] References (Optional, but recommended) 
 
 
@@ -92,8 +90,8 @@ In assessing compliance with our [Data and Code Availability Policy](https://www
 
 *This research project...*
 
-- [ ] uses observational data.
-- [ ] uses *confidential* observational data.
+- [x] uses observational data.
+- [x] uses *confidential* observational data.
 - [ ] uses data generated via experiment or trial by the authors (in field or lab).
   - [ ] For lab experiments: The code to implement the experimental protocol (z-Tree, o-Tree etc) is included in the package.
   - [ ] A PDF copy of IRB approval is contained in the package.
@@ -109,8 +107,6 @@ In assessing compliance with our [Data and Code Availability Policy](https://www
 
 # Data description
 
-> {REPLICATOR} If the project has any confidential or restricted data, please leave the following statements here. If not, delete until next heading (`## Data Sources`).
-
 For any data that cannot be provided as part of the replication package, please provide the following information as part of the README.
 
 > {REQUIRED}  Please specify how long the data will be preserved in the restricted-access location.
@@ -125,85 +121,67 @@ For any data that cannot be provided as part of the replication package, please 
 
 ## Data Sources
 
-> {REPLICATOR} Identify all INPUT data sources, i.e. raw data files. Fill out the table below (regardless of whether the authors do provide a similar table in their readme). For each data source, list in THIS document presence or absence of source, codebook/information on the data, and summary statistics. Summary statistics and codebook may not be necessary if they are available for public use data. In all cases, if the author of the article points to an online location for such information, that is OK. Point out only a summary of shortcomings. For all data sources, check for a data citation. Oftentimes authors will cite the **paper** in which a dataset is originally used, but this is not a *data* citation. If you have found what you think to be a data citation, quote it in the report as shown below for the "Example data". When filling out the table, you should go through this mental list for each data source:
-> 
-> - [ ] Dataset is provided in public (dataverse) deposit (yes/no)
-> - [ ] Dataset is PRIVATELY provided (not for publication)
-> - [ ] DOI or URL is provided, and works: (PROVIDE URL OR DOI HERE)
-> - [ ] Access conditions are described:
->   - {REPLICATOR}: summarize the access conditions here.
-> - [ ] Data are not cited, but a working paper, article, or other document is cited > (not a data citation)
-> - [ ] Data are cited
->   - [ ] in the manuscript
->   - [ ] in the README
->
-> if anything needs adding, for a particular dataset, just add below the table. See Example.
+The table lists original input data sources, not every derived analysis-ready file. "Public" refers to whether the original source data are included in the public replication package. "Private" refers to whether the original source data were separately supplied to the replicator for checking.
 
-| file/name            | public | private | DOI/URL | Access described| cited readme | cited paper |
-| ----                 | ---    | ---     | ---     | ---             | ----         | ----        | 
-| data/raw/example.dta | yes    | no      | yes     | no              | yes          | yes         |
-| example2.dta         | yes    | no      | -       | no              | no           | yes         |
-| BLS                  | no     | no      | yes     | no              | yes          | yes          |
+| source | public | private | DOI/URL | access described | codebook/info | summary stats | cited README | cited paper |
+| ---- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Transaction-level CDR: calls, SMS, data usage, shortcode calls | no; synthetic 5-row files only | no | no | partial: legal agreement and privacy restrictions described, but no access path | partial: synthetic schemas only | yes: paper text and Appendix Tables A5-A6 | no data citation | no data citation |
+| Individual-quarter CDR panel | no; synthetic file only | no | no | partial: same CDR restrictions | partial: synthetic schema only | yes: Appendix Table A6 Panel E | no data citation | no data citation |
+| Household survey microdata on religious practices | no; synthetic file and aggregate counts only | no | no | partial: described as confidential; no access path | partial: synthetic schema and aggregate response counts only | yes: Appendix Table A6 Panel A | no; article only | no; article only |
+| Cell tower coordinates / antenna geolocation | no; synthetic tower file only | no | no | partial: confidential/privacy restriction described | partial: synthetic schema only | partial: tower counts in paper; no variable summaries | no data citation | no data citation |
+| ISAF SIGACTS violence data | yes: `Data/figures_data/sigacts_afghanistan.csv` and classification crosswalk | yes | yes: [SIGACTS file][sigacts] | public link provided | yes: package codebook and classification crosswalk | yes: paper incident counts and Appendix Table A5 Panel A | yes | yes; URL footnote |
+| ERA5-Land-based SPEI climate data | no; derived grid-month/year variables only | no | yes: [ERA5-Land article DOI][era5] | no specific data-access instructions beyond citation | derived variables only | yes: Appendix Table A5 Panels B-C | yes | yes |
+| MODIS MOD13A3 EVI | no; derived EVI measure only | no | yes: [MODIS data DOI][modis] | public DOI provided | derived variable only | yes: Appendix Table A5 Panel C | yes | no; paper cites Asher and Novosad method only |
+| FAO Afghanistan land cover / irrigation | no; derived land shares only | no | yes: [FAO metadata URL][fao] | public URL provided | derived variables only | yes: Appendix Table A5 Panel D | yes | yes |
+| UNODC district-year poppy cultivation | no; derived poppy variables only | no | yes: [UNODC report URL][unodc] | report URL provided | derived variables only | yes: Appendix Table A6 Panel F | yes | yes |
+| ACSOR district accessibility scores | no; derived accessibility variables only | no | yes: [ACSOR homepage][acsor] | no dataset-specific access conditions; homepage only | derived variables only | yes: Appendix Table A6 Panel B | yes | yes |
+| PIX Taliban territorial-control data | no; derived indicator only | no | yes: [PIX][pix] | URL resolves to a login page | derived variable only | yes: Appendix Table A6 Panel D | yes | yes |
+| Village-level language / ethnicity data compiled by AIMS, CSO, USAID, and Yale | no; derived ethnicity shares only | no | no | no access conditions | derived variables only | yes: Appendix Table A6 Panel D | no data citation | partial: source named, no data citation |
+| AIMS Afghanistan district boundaries | yes: `Data/figures_data/district_shp/district398.*` | no | no author-provided URL | no access conditions | no package codebook entry for shapefile attributes | not necessary for public geography | no data citation | no data citation |
+| GADM country boundary and derived grid/raster/crosswalk components | partial: GADM country boundary and `rasterwithmask.nc` included; cell-district crosswalk not separate | no | yes for GADM source: [GADM v3.6][gadm36] | no package-specific access conditions | no package codebook entry for shapefile/raster attributes | not necessary for public geography | no data citation | no data citation |
 
-### Example data: Bureau of Labor Statistics
+Shortcomings: the original CDR, individual-quarter CDR panel, household survey microdata, and cell tower coordinates are not available to the replicator; only synthetic stand-ins or aggregate derivatives are included. The codebook documents distributed files and derived variables, but not enough original-source detail to verify the confidential data if access were later granted. The package also does not provide a codebook entry for the included shapefiles or `rasterwithmask.nc`.
 
-> {REPLICATOR}: **Example data: Bureau of Labor Statistics** In this example, data are not provided, a link is provided in the README, and that's about it. Here's how you would fill that out:
-
-- [ ] Dataset is provided in public deposit
-- [ ] Dataset is PRIVATELY provided (not for publication)
-- [x] DOI or URL is provided, and works: http://data.bls.gov/cgi-bin/surveymost?sm+08
-- [ ] Access conditions are described:
-  - No information on access conditions.
-- [ ] Data are not cited, but a working paper, article, or other document is cited (not a data citation)
-- [x] Data are cited
-  - [x] in the manuscript
-  - [x] in the README:
-
-> Bureau of Labor Statistics. 2000–2010. “Current Employment Statistics: Colorado, Total Nonfarm, Seasonally adjusted - SMS08000000000000001.” United States Department of Labor. http://data.bls.gov/cgi-bin/surveymost?sm+08 (accessed February 9, 2011).
-
-
-
+[sigacts]: https://github.com/knapply/data4ds4da/blob/master/data/sigacts_afghanistan_df.rda
+[era5]: https://doi.org/10.5194/essd-13-4349-2021
+[modis]: https://doi.org/10.5067/MODIS/MOD13A3.061
+[fao]: https://data.apps.fao.org/map/catalog/srv/eng/catalog.search?id=1289#/metadata/1dd35e22-bd51-4c4d-bf0c-546baababe74
+[unodc]: https://www.unodc.org/documents/crop-monitoring/Afghanistan/20210217_report_with_cover_for_web_small.pdf
+[acsor]: https://acsor-surveys.com/
+[pix]: https://pixtoday.net
+[gadm36]: https://gadm.org/download_country_v3.html
 
 # Requirements 
 
 > {REPLICATOR}: Check that these requirements are met. 
 
-- [ ] README is in TXT, MD, or PDF format
-- [ ] README is accessible at the root of the package (not inside a folder)
+- [x] README is in TXT, MD, or PDF format
+- [x] README is accessible at the root of the package (not inside a folder)
 - [ ] Title conforms to guidance (starts with "Data and Code for: Title of Paper" or "Code for: Title of Paper", is properly capitalized)
 - [ ] Authors (with affiliations) are listed in the same order as on the paper
-
-> {REPLICATOR}: If any of the above are NOT checked, leave the related {REQUIRED} element here. Otherwise, delete the line.
-
-> {REQUIRED} Please ensure that a ASCII (txt), Markdown (md), or PDF version of the README are available in the data and code deposit.
 
 > {REQUIRED} Please review the title of the deposit as per our guidelines.
 
 > {REQUIRED} Please review authors and affiliations on the deposit. In general, they are the same, and in the same order, as for the manuscript; however, authors can deviate from that order.
-
 
 ## Stated Requirements
 
 > {REPLICATOR}: The authors may have specified specific requirements in terms of software, computer hardware, etc. Please list them here. This is **different** from the Computing Environment of the Replicator. You have the option to amend these with unstated requirements later. If all requirements are listed, check the box "Requirements are complete".
 
 - [ ] No requirements specified
-- [ ] Software Requirements specified as follows:
-  - Software 1
-  - Software 2
-- [ ] Computational Requirements specified as follows:
-  - Cluster size, etc.
-- [ ] Time Requirements specified as follows:
-  - Length of necessary computation (hours, weeks, etc.)
+- [x] Software Requirements specified as follows:
+  - StataNow 19.5 SE
+  - R 4.40
+  - Quarto > 1.4
+  - Python 3.10.x
+- [x] Computational Requirements specified as follows:
+  - Windows 11 Enterprise; Intel Core i7-12700H (20 logical cores); 16 GB RAM.
+  - For the CDR pipeline "Requires a secure high-memory server; not executable without the confidential CDR data.""
+- [x] Time Requirements specified as follows:
+  - To compute the _reproducible_ analysis  ~9mn
+  - To compute the _entire_ analysis ~ weeks
 
-- [ ] Requirements are complete.
-
-> {REPLICATOR}: If the requirements are NOT complete, please leave this line in. If unsure, leave this line in:
-
-For missing requirements, see the list of required changes in @sec-findings
-
-> {REPLICATOR}: If easier, simply copy-and-paste the authors' stated requirements here:
-
-
+- [x] Requirements are complete.
 
 # Analyzing Data and Code Files
 
@@ -219,67 +197,50 @@ For missing requirements, see the list of required changes in @sec-findings
 
 {{< include generated/report-large-files.md >}}
 
-
-
 ## Code description
 
-> {REPLICATOR}: Review the code (but do not run it yet). Identify programs that create "analysis files" ("data preparation code"). Identify programs that create tables and figures. Not every deposit will have separate programs for this.
+The package contains 19 cleaning programs (12 Python, two R, and five Stata) and 12 analysis programs (10 R, one Stata, and one Quarto). `13_precleaning_alltables.do` creates seven analysis datasets. `All_Tables.do` generates Tables 1--3 and A1--A12/A14; `TabA13.R` generates Table A13. `All_Figures.R` calls the programs for Figures 1--4 and A3--A6, while Figure A2 must be rendered separately. The detailed program and line-number crosswalk is in [package-output-map.xlsx](package-output-map.xlsx).
 
-> {REPLICATOR}: Identify all **Figure, Table, and any in-text numbers**. Create a list, mapping each of them to a particular program and line number within the program (use [this template](package-output-map.xlsx)). Commit that list. You will come back to the list in your findings. IN THIS SECTION, point out only a summary description, including of shortcomings. E.g.
+Shortcomings identified during code review:
 
-> {REPLICATOR}: For example, you could write "There are four provided Stata do files, three Matlab .m files, including a "master.do"."
-> {REPLICATOR}: And you could list the issues you encounter:
-> {REPLICATOR}: - Table 5: could not identify code that produces Table 5
-> {REPLICATOR}: - Neither the program codes, nor the README, identify which tables are produced by what program.
+- Eighteen of the 19 cleaning programs contain only NUL bytes and therefore cannot be reviewed. The only readable cleaning program is `13_precleaning_alltables.do`.
+- `Fig1.R` also contains only NUL bytes, so the code producing Figure 1 cannot be identified.
+- No program was provided for Figure A1.
+- There is no single controller for every output: Figure A2 and Table A13 are outside the figure and table controllers, respectively.
+- Figure A2, Tables A2--A3, and Table A13 use synthetic data or placeholder inputs rather than the original confidential data.
+- Several substantive in-text numerical claims are not generated by identifiable code; these are listed separately in `package-output-map.xlsx`.
 
 {{< include generated/report-cloc.md >}}
 
 
-- [ ] The replication package contains a "main" or "master" file(s) which calls all other auxiliary programs.
-
-> {REPLICATOR}: If the above checkbox for "main" file is NOT checked, leave the following SUGGESTION in the report!
-
-> {SUGGESTED} We strongly advise the use of a single (or a small number of) main control file(s) to automatically reproduce all figures and tables in the paper, without manual interaction.
+- [x] The replication package contains a "main" or "master" file(s) which calls all other auxiliary programs.
 
 > NOTE: In-text numbers that reference numbers in tables do not need to be listed. Only in-text numbers that correspond to no table or figure need to be listed.
 
 ## Computing Environment of the Replicator
 
-> {REPLICATOR}: You are now running the code!
+MacBookPro M4Pro 24Go RAM
 
-> {REPLICATOR}: This might be automated, for now, please fill in manually. Remove examples that are not relevant, adjust examples to fit special circumstances. Some of this is available from the standard log output in Stata or R. Some frequently used details are below. Some of these details can be found as follows:
->
-> - (Windows) by right-clicking on "This PC"
-> - (Mac) Apple-menu > "About this Mac"
-> - (Linux) see code in `tools/linux-system-info.sh`
->
-> Some options are listed below. Choose the one that applies.
-
-- Mac Laptop M2 MacBook Pro, MacOS 10.14.6, 8 GB of memory, (M2 Processor, 8 cores)
-- RedCloud Servers: Intel Xeon Processor (Skylake) 3.09 GHz (18 processors), Installed Ram 176 GB, 64-bit operating system, x64-based processor
-- CCSS Cloud: Windows Server AMD EPYC 7763 64-Core Processor 2.44 GHz, 128GB
-- BioHPC Linux server, Rocky Linux 9.0, AMD Opteron Processor 6380 / 16 cores/ 125 GB memory (adjust as necessary from output of linux-system-info.sh)
-- WholeTale (describe the environment chosen)
-- CodeOcean (describe the type of capsule chosen) Intel(R) Xeon(R) Platinum 8259CL CPU @ 2.50GHz (16 cores), 128 GB Memory
-- Bitbucket Pipelines, "Ubuntu 20.04.2 LTS", Intel(R) Xeon(R) Platinum 8259CL CPU @ 2.50GHz, 8 cores, 9GB memory
-- Codespaces, "Ubuntu 20.04.2 LTS", Intel(R) Xeon(R) Platinum 8272CL CPU @ 2.60GHz, 2 core, 8GB/ 4-core, 16GB/ 8-core, 32 GB/ 16-core, 64GB (choose appropriately)
-
-
-> {REPLICATOR}: Please also list the software you used (specific versions). List only the ones you used, add any not listed in the examples:
-
-- Stata/MP 18.0
-- Matlab R2022a
-- Intel Compiler 3.14152 (note: there is no such thing, so please verify the version!)
+- Stata/MP 19.5
+- R 4.5.1
+- Python 3.14.2
 
 # Replication
 
 > {REPLICATOR}: provide details about your process of accessing the code and data.
 > 
-> - Do NOT detail things like "I save them on my Desktop".
-> - DO describe actions that you did as per {REPLICATOR} ("I added a config.do")
-> - DO describe any other actions you needed to do ("I had to make changes in multiple programs"), without going into TOO much detail.
+> I downloaded the code from GitHub and added the data from Dropbox, but there is an issue in the zipped replication package which contains two zipped subfolders : `Fengzhe Liu - replication package` and `Fengzhe Liu - replication package_20260529`. The first package contains the codebook and paper and appendix in pdf, I then assumed it was the correct one.
+
+To generate output you need to update the subsequent files with the replication package location :
+- `Code/Analysis/All_Tables.do`
+- `Code/Analysis/TabA13.R`
+- `FigA2.qmd`
 > 
-> BUT:
+> The replication for Stata was impossible due to the bad formating of the `dta` files. It may be due to the facts that stata does not support empty datasets.
+
+`file /Users/REPLICATOR/JPE/dube/JPE-Dube-20250296/replication-package/replication package/Data/tables_data/dist_level.dta not Stata format`
+
+BUT:
 > 
 > - DO provide ENOUGH detail so that an author, without access to the logs, can understand what needed to be fixed, including a copy-paste of the error message.
 > - DO commit to git before EACH new run with corrected code.
