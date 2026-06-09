@@ -15,58 +15,10 @@ format:
 | Title  |  {{< var title >}} |
 | Iteration |  {{< var round >}} |
 
-
-
-> {REPLICATOR} Every line which looks like this one, that is, it starts with {REPLICATOR} and has this formatting (there is a grey bar on the left 👀), is an **instruction for the replicator**. When you are done with editing this file, _there should be no such line left_ - you should delete all of them.
-
-> {REPLICATOR} Next to {REPLICATOR} for you, the replicator, there are instructions for the authors/data editor. Those are labelled either {REQUIRED} or {SUGGESTED}. You should delete those *only if specifically instructed*.
-
-> {REPLICATOR}: You should look at additional [Step by step guidance from Data Editor for Replicators](https://jpe-reproducibility.github.io/jpereplicators)
-
-::: {.callout-tip}
-
-# {Replicator}: Glossary (delete this before you submit your report!)
-
-_A brief explanation of important terms, before we start!_
-
-1. Dropbox: a location where authors upload their package and where the journal office uploads pdfs of paper and appendix. You download the package from there via the URL contained in your assignment email.
-2. `gh`: Github.com.
-3. Github Repository (_repo_): The location on `gh` where we store the _code_ of a given package (not the data!). It is also the location where you should file an issue tagging `@jpedataeditor` in the text, in case you encounter any problems or have questions. The github repo associated with this package was in your assignment email for this package. Let me print it here again for you (keep a browser tab open): [{{< var repo >}}]({{< var repo >}})
-4. `round`: the iteration number of this package. Notice that on the repo, each iteration has their own branch. Notice that you start on `round1`.
-5. manuscript/paper: The PDFs of accepted paper and appendices, which we want to verify. You should copy both paper and appendix into the root of this repo
-
-:::
-
-
-Some useful information up front:
-
-- [JPE Data and Code Availability Policy](https://www.journals.uchicago.edu/journals/jpe/datapolicy)
-- [Step by step guidance from Data Editor for Authors](https://jpedataeditor.github.io/) 
-- [Template README](https://social-science-data-editors.github.io/template_README/)
-
-
-
-> {REPLICATOR} the file you are looking at lives in a git repository on your computer. You should place the repository in a location on your computer where you have read and write access (I would not put it on any cloud storage to avoid issues). 
-
-
-> {REPLICATOR} you will edit _this_ file (`./TEMPLATE.qmd`). It is the source of your report. The package of the authors lives in folder `replication-package/`. We call the lowest level of this repo (marked by the dot `.` in `./TEMPLATE.qmd`) the _root of the repo_. Do not get confused if the authors talk about the _root of their package_, which would be location `./replication-package/` in this case.
-
-
-
 # Summary
 
-> {REPLICATOR} **The Data Editor** will fill this part out. It will be based on any {REQUIRED} and {SUGGESTED} action items that the report makes a note of.
-
-
-In assessing compliance with our [Data and Code Availability Policy](https://www.journals.uchicago.edu/journals/jpe/datapolicy), our reproducibility team has identified the following issues, which we ask you to address:
-
-1. Data Editor's first point.
-2. Data Editor's second point.
 
 # General
-
-
-> {REPLICATOR} Check off the following sections/elements that you find in either the README provided by the authors, or in the authors' online appendix (rare).
 
 - [ ] Data Availability and Provenance Statements
   - [x] Statement about Rights - Part 1: Right to use the data (e.g. *did the authors lawfully obtain the data*)
@@ -85,8 +37,6 @@ In assessing compliance with our [Data and Code Availability Policy](https://www
 
 
 # High-level Description of Research Project
-
-> {REPLICATOR} Tick all applicable boxes. You tick a box by placing an `x` between the square brackets (don't change anything else).
 
 *This research project...*
 
@@ -121,26 +71,24 @@ For any data that cannot be provided as part of the replication package, please 
 
 ## Data Sources
 
-The table lists original input data sources, not every derived analysis-ready file. "Public" refers to whether the original source data are included in the public replication package. "Private" refers to whether the original source data were separately supplied to the replicator for checking.
+| source | public | private | DOI/URL | access described | codebook/info | cited README | cited paper |
+| ---- | --- | --- | --- | --- | --- | --- | --- |
+| Transaction-level CDR: calls, SMS, data usage, shortcode calls | no | no | no | partial: legal agreement and privacy restrictions described, but no access path | partial: synthetic schemas only | no data citation | no data citation |
+| Individual-quarter CDR panel | no | no | no | partial: same CDR restrictions | partial: synthetic schema only | no data citation | no data citation |
+| Household survey microdata on religious practices | no | no | no | partial: described as confidential; no access path | partial: synthetic schema and aggregate response counts only | no; article only | no; article only |
+| Cell tower coordinates / antenna geolocation | no | no | no | partial: confidential/privacy restriction described | partial: synthetic schema only | no data citation | no data citation |
+| ISAF SIGACTS violence data | no | yes | yes: [SIGACTS file][sigacts] | public link provided | yes: package codebook and classification crosswalk | yes | yes; URL footnote |
+| ERA5-Land-based SPEI climate data | no | no | yes: [ERA5-Land article DOI][era5] | no specific data-access instructions beyond citation | derived variables only | yes | yes |
+| MODIS MOD13A3 EVI | no | no | yes: [MODIS data DOI][modis] | public DOI provided | derived variable only | yes | no; paper cites Asher and Novosad method only |
+| FAO Afghanistan land cover / irrigation | no | no | yes: [FAO metadata URL][fao] | public URL provided | derived variables only | yes | yes |
+| UNODC district-year poppy cultivation | no | no | yes: [UNODC report URL][unodc] | report URL provided | derived variables only | yes | yes |
+| ACSOR district accessibility scores | no | no | yes: [ACSOR homepage][acsor] | no dataset-specific access conditions; homepage only | derived variables only | yes | yes |
+| PIX Taliban territorial-control data | no | no | yes: [PIX][pix] | URL resolves to a login page | derived variable only | yes | yes |
+| Village-level language / ethnicity data compiled by AIMS, CSO, USAID, and Yale | no | no | no | no access conditions | derived variables only | no data citation | partial: source named, no data citation |
+| AIMS Afghanistan district boundaries | yes: `Data/figures_data/district_shp/district398.*` | no | no author-provided URL | no access conditions | no package codebook entry for shapefile attributes | no data citation | no data citation |
+| GADM country boundary and derived grid/raster/crosswalk components | partial: GADM country boundary and `rasterwithmask.nc` included; cell-district crosswalk not separate | no | yes for GADM source: [GADM v3.6][gadm36] | no package-specific access conditions | no package codebook entry for shapefile/raster attributes | no data citation | no data citation |
 
-| source | public | private | DOI/URL | access described | codebook/info | summary stats | cited README | cited paper |
-| ---- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Transaction-level CDR: calls, SMS, data usage, shortcode calls | no; synthetic 5-row files only | no | no | partial: legal agreement and privacy restrictions described, but no access path | partial: synthetic schemas only | yes: paper text and Appendix Tables A5-A6 | no data citation | no data citation |
-| Individual-quarter CDR panel | no; synthetic file only | no | no | partial: same CDR restrictions | partial: synthetic schema only | yes: Appendix Table A6 Panel E | no data citation | no data citation |
-| Household survey microdata on religious practices | no; synthetic file and aggregate counts only | no | no | partial: described as confidential; no access path | partial: synthetic schema and aggregate response counts only | yes: Appendix Table A6 Panel A | no; article only | no; article only |
-| Cell tower coordinates / antenna geolocation | no; synthetic tower file only | no | no | partial: confidential/privacy restriction described | partial: synthetic schema only | partial: tower counts in paper; no variable summaries | no data citation | no data citation |
-| ISAF SIGACTS violence data | yes: `Data/figures_data/sigacts_afghanistan.csv` and classification crosswalk | yes | yes: [SIGACTS file][sigacts] | public link provided | yes: package codebook and classification crosswalk | yes: paper incident counts and Appendix Table A5 Panel A | yes | yes; URL footnote |
-| ERA5-Land-based SPEI climate data | no; derived grid-month/year variables only | no | yes: [ERA5-Land article DOI][era5] | no specific data-access instructions beyond citation | derived variables only | yes: Appendix Table A5 Panels B-C | yes | yes |
-| MODIS MOD13A3 EVI | no; derived EVI measure only | no | yes: [MODIS data DOI][modis] | public DOI provided | derived variable only | yes: Appendix Table A5 Panel C | yes | no; paper cites Asher and Novosad method only |
-| FAO Afghanistan land cover / irrigation | no; derived land shares only | no | yes: [FAO metadata URL][fao] | public URL provided | derived variables only | yes: Appendix Table A5 Panel D | yes | yes |
-| UNODC district-year poppy cultivation | no; derived poppy variables only | no | yes: [UNODC report URL][unodc] | report URL provided | derived variables only | yes: Appendix Table A6 Panel F | yes | yes |
-| ACSOR district accessibility scores | no; derived accessibility variables only | no | yes: [ACSOR homepage][acsor] | no dataset-specific access conditions; homepage only | derived variables only | yes: Appendix Table A6 Panel B | yes | yes |
-| PIX Taliban territorial-control data | no; derived indicator only | no | yes: [PIX][pix] | URL resolves to a login page | derived variable only | yes: Appendix Table A6 Panel D | yes | yes |
-| Village-level language / ethnicity data compiled by AIMS, CSO, USAID, and Yale | no; derived ethnicity shares only | no | no | no access conditions | derived variables only | yes: Appendix Table A6 Panel D | no data citation | partial: source named, no data citation |
-| AIMS Afghanistan district boundaries | yes: `Data/figures_data/district_shp/district398.*` | no | no author-provided URL | no access conditions | no package codebook entry for shapefile attributes | not necessary for public geography | no data citation | no data citation |
-| GADM country boundary and derived grid/raster/crosswalk components | partial: GADM country boundary and `rasterwithmask.nc` included; cell-district crosswalk not separate | no | yes for GADM source: [GADM v3.6][gadm36] | no package-specific access conditions | no package codebook entry for shapefile/raster attributes | not necessary for public geography | no data citation | no data citation |
-
-Shortcomings: the original CDR, individual-quarter CDR panel, household survey microdata, and cell tower coordinates are not available to the replicator; only synthetic stand-ins or aggregate derivatives are included. The codebook documents distributed files and derived variables, but not enough original-source detail to verify the confidential data if access were later granted. The package also does not provide a codebook entry for the included shapefiles or `rasterwithmask.nc`.
+Shortcomings: the original CDR, individual-quarter CDR panel, household survey microdata, and cell tower coordinates are not available to the replicator; only synthetic stand-ins or aggregate derivatives are included. The codebook documents distributed files and derived variables, but not enough original-source detail to verify the confidential data if access were later granted. The package also does not provide a codebook entry for the included shapefiles or `rasterwithmask.nc`. No datasets are provided, including public ones.
 
 [sigacts]: https://github.com/knapply/data4ds4da/blob/master/data/sigacts_afghanistan_df.rda
 [era5]: https://doi.org/10.5194/essd-13-4349-2021
@@ -153,8 +101,6 @@ Shortcomings: the original CDR, individual-quarter CDR panel, household survey m
 
 # Requirements 
 
-> {REPLICATOR}: Check that these requirements are met. 
-
 - [x] README is in TXT, MD, or PDF format
 - [x] README is accessible at the root of the package (not inside a folder)
 - [ ] Title conforms to guidance (starts with "Data and Code for: Title of Paper" or "Code for: Title of Paper", is properly capitalized)
@@ -166,8 +112,6 @@ Shortcomings: the original CDR, individual-quarter CDR panel, household survey m
 
 ## Stated Requirements
 
-> {REPLICATOR}: The authors may have specified specific requirements in terms of software, computer hardware, etc. Please list them here. This is **different** from the Computing Environment of the Replicator. You have the option to amend these with unstated requirements later. If all requirements are listed, check the box "Requirements are complete".
-
 - [ ] No requirements specified
 - [x] Software Requirements specified as follows:
   - StataNow 19.5 SE
@@ -175,17 +119,15 @@ Shortcomings: the original CDR, individual-quarter CDR panel, household survey m
   - Quarto > 1.4
   - Python 3.10.x
 - [x] Computational Requirements specified as follows:
-  - Windows 11 Enterprise; Intel Core i7-12700H (20 logical cores); 16 GB RAM.
+  - Windows 11 Enterprise; Intel Core i7-12700H (20 logical cores); 16 GB RAM. 
   - For the CDR pipeline "Requires a secure high-memory server; not executable without the confidential CDR data.""
 - [x] Time Requirements specified as follows:
-  - To compute the _reproducible_ analysis  ~9mn
-  - To compute the _entire_ analysis ~ weeks
+  - To compute the _reproducible_ analysis  ~9mn  
+  - To compute the _entire_ analysis ~ weeks  
 
 - [x] Requirements are complete.
 
 # Analyzing Data and Code Files
-
-> {REPLICATOR} Here I provide you with a list of what I identified as *data files* based on file endings. Please check the list and amend if there are obvious mistakes. Watch out for Personally Identifiable Information (PII)!
 
 {{< include generated/report-pii.md >}}
 
@@ -212,8 +154,7 @@ Shortcomings identified during code review:
 
 {{< include generated/report-cloc.md >}}
 
-
-- [x] The replication package contains a "main" or "master" file(s) which calls all other auxiliary programs.
+- [ ] The replication package contains a "main" or "master" file(s) which calls all other auxiliary programs.
 
 > NOTE: In-text numbers that reference numbers in tables do not need to be listed. Only in-text numbers that correspond to no table or figure need to be listed.
 
@@ -221,198 +162,153 @@ Shortcomings identified during code review:
 
 MacBookPro M4Pro 24Go RAM
 
-- Stata/MP 19.5
+- Stata/MP 19.5 
 - R 4.5.1
 - Python 3.14.2
 
 # Replication
 
-> {REPLICATOR}: provide details about your process of accessing the code and data.
-> 
-> I downloaded the code from GitHub and added the data from Dropbox, but there is an issue in the zipped replication package which contains two zipped subfolders : `Fengzhe Liu - replication package` and `Fengzhe Liu - replication package_20260529`. The first package contains the codebook and paper and appendix in pdf, I then assumed it was the correct one.
 
-To generate output you need to update the subsequent files with the replication package location :
+I downloaded the code from GitHub and added the data from Dropbox, but there is an issue in the zipped replication package which contains two zipped subfolders : `Fengzhe Liu - replication package` and `Fengzhe Liu - replication package_20260529`. The first package contains the codebook and paper and appendix in pdf, I then assumed it was the correct one. 
+
+To generate output you need to update the subsequent files with the replication package location : 
 - `Code/Analysis/All_Tables.do`
 - `Code/Analysis/TabA13.R`
 - `FigA2.qmd`
-> 
+
+The replication for Stata was impossible due to the bad formating of the `dta` files. It may be due to the facts that stata does not support empty datasets.
+
+`file /Users/REPLICATOR/JPE/dube/JPE-Dube-20250296/replication-package/replication package/Data/tables_data/dist_level.dta not Stata format`
+
+Similar issue for the R code : 
+
+```r
+df_panel = fread(paths[['hashQtrPanel']])
+Error in `fread()`:
+! Input is empty or only contains BOM or terminal control characters
+```
+
+For the Quarto Notebook the error stems from the shapefile format that seems corrupted: 
+
+```r
+Cannot open "/Users/REPLICATOR/JPE/dube/JPE-Dube-20250296/replication-package/replication package 2/Data/figures_data/country_shp/gadm36_AFG_0.shp"; The source could be corrupt or not supported. See `st_drivers()` for a list of supported formats.
+```
+
+# Findings {#sec-findings}
+
+Not able to reproduce code due to bad formatting of databases or total absence of data. 
+
 > The replication for Stata was impossible due to the bad formating of the `dta` files. It may be due to the facts that stata does not support empty datasets.
 
 `file /Users/REPLICATOR/JPE/dube/JPE-Dube-20250296/replication-package/replication package/Data/tables_data/dist_level.dta not Stata format`
 
-BUT:
-> 
-> - DO provide ENOUGH detail so that an author, without access to the logs, can understand what needed to be fixed, including a copy-paste of the error message.
-> - DO commit to git before EACH new run with corrected code.
-> - DO (after all debugging is completed) a full run through the data, top-to-bottom, once all bugs are fixed, using the approriate method (command line or right-click).
+> Similar issue for the R code : 
 
-Example:
-
-- Downloaded code and data from dropbox.
-- Commited code to git repo.
-- Added the config.do generating system information.
-- Ran code as per README, but the third step did not work. (describe the problem HERE, and paste the full log in an issue on the github repo of this package - do not forget to add the tag @jpedataeditor whenever you open an issue!) 
-
-```R
-error: command distinct unknown
+```r
+df_panel = fread(paths[['hashQtrPanel']])
+Error in `fread()`:
+! Input is empty or only contains BOM or terminal control characters
 ```
 
-- Had to add undocumented package `distinct` to the install portion of the config file. Ran again.
-- Code failed because of a typo in the name of the file "`superdata.dta`" (was: `superdta.dta`). Fixed. Ran again.
-- Code ran to completion. 
+> For the Quarto Notebook the error stems from the shapefile format that seems corrupted: 
 
-> {REPLICATOR}: You are done now with the actual replication task. We now move to writing your report.
-
-# Findings {#sec-findings}
-
-> {REPLICATOR}: Describe your findings both positive and negative in some detail, for each **Data Preparation Code, Figure, Table, and any in-text numbers**. You can re-use the Excel file created under *Code Description*. When errors happen, be as precise as possible. For differences in figures, provide both a screenshot of what the manuscript contains, as well as the figure produced by the code you ran. For differences in numbers, provide both the number as reported in the manuscript, as well as the number replicated. If too many numbers, contact your supervisor.
->
-> Screenshots are best added to this `.qmd` file via the VScode extension [markdown paste](https://marketplace.visualstudio.com/items/?itemName=telesoho.vscode-markdown-paste-image). You need to find out how your OS can screenshot to the system clipboard (on my mac I have to do shift+control+cmd+4 instead of only the usual shift+cmd+4 to achieve this). Once you took the screen shot, you can use the markdown paste extension to literally *paste* the image into this qmd. It will create a filename with a timestamp. I set the preferences for the extension (in hidden folder `.vscode`) so that your screenshots go to the `images/` folder automatically. You want to commit that folder together with this file. Go into the command console of VScode and type "Markdown Paste" and memorize the shortcut (or just hit enter). You can modify the filename - no need. You end up with something like this:
-
-![DELETE THIS image FROM THE REPO before you commit](images/screenshot-20250627144043.png){width=80%}
-
-
-
-> If you can, add **textual output instead of screenshots**. I.e. if a script spits out an error, copy and paste the error into a code block (the thing delimited by three backticks ````` below), don't take a screen shot of your terminal. Here is an example (notice you should decorate the code block with the relevant language):
-
-```julia
-
-julia> using RES
-[ Info: Welcome to RES.jl
-[ Info: First tell us which journal you are handling in this session.
-❯❯❯ Which Journal are you working on? 
-  EJ, EctJ
-EJ
-[ Info: Setting up email
-[ Info: Running in production mode
-┌ Warning: not in test mode!
-└ @ RES ~/git/EJData/RES.jl/src/gsheets.jl:53
-Python error:
-PyError ($(Expr(:escape, :(ccall(#= /Users/floswald/.julia/packages/PyCall/1gn3u/src/pyfncall.jl:43 =# @pysym(:PyObject_Call), PyPtr, (PyPtr, PyPtr, PyPtr), o, pyargsptr, kw))))) <class 'google.auth.exceptions.RefreshError'>
-RefreshError('invalid_grant: Token has been expired or revoked.', {'error': 'invalid_grant', 'error_description': 'Token has been expired or revoked.'})
-  File "/Users/floswald/.julia/conda/3/aarch64/lib/python3.10/site-packages/google/oauth2/credentials.py", line 344, in refresh
-    ) = reauth.refresh_grant(
-  File "/Users/floswald/.julia/conda/3/aarch64/lib/python3.10/site-packages/google/oauth2/reauth.py", line 365, in refresh_grant
-    _client._handle_error_response(response_data, retryable_error)
-  File "/Users/floswald/.julia/conda/3/aarch64/lib/python3.10/site-packages/google/oauth2/_client.py", line 72, in _handle_error_response
-    raise exceptions.RefreshError(
-
+```r
+Cannot open "/Users/REPLICATOR/JPE/dube/JPE-Dube-20250296/replication-package/replication package 2/Data/figures_data/country_shp/gadm36_AFG_0.shp"; The source could be corrupt or not supported. See `st_drivers()` for a list of supported formats.
 ```
+There is a mistake in numbering in table A6, the letter E is duplicated:
+
+![TableA6](images/Dube-R1-TableA6.png)
 
 ## Missing Requirements
 
-> {REPLICATOR}: If the replication package contains Stata programs run `tools/Stata_scan_code/scan_packages.do`, ensuring that you update the global `codedir` first. If the data is accessible, add any packages not mentioned in the README to the `config.do` and paste the excel output as a table below. If the data is restricted-access and not obtainable in a reasonable amount of time, paste the excel output as a table below.
-
-> {REPLICATOR}: If it turns out that some requirements were not stated/ are incomplete (software, packages, operating system), please list the *missing* list of requirements here. Remove lines that are not necessary. If the stated requirements are complete, delete this entire section, including the [REQUIRED] tag at the end.
-
-- [ ] Software Requirements 
-  - [ ] Stata
-    - [ ] Version
-    - Packages go here
-  - [ ] Matlab
-    - [ ] Version
-  - [ ] R
-    - [ ] Version
-    - R packages go here
-  - [ ] Python
-    - [ ] Version
-    - Python package go here
-  - [ ] REPLACE ME WITH OTHER
-- [ ] Computational Requirements specified as follows:
-  - Cluster size, disk size, memory size, etc.
-- [ ] Time Requirements 
-  - Length of necessary computation (hours, weeks, etc.)
-
-> [REQUIRED] Please amend README to contain complete requirements. 
-
-You can copy the section above, amended if necessary.
-
-
+Since the code does not run, I was not able to test whether any requirements are missing.
+ 
 ## Data Preparation Code
 
-Examples:
-
-- Program `1-create-data.do` ran without error, output expected data
-- Program `2-create-appendix-data.do` failed to produce any output.
+Data preparation is not possible since we cannot have access to the confidential data.
 
 ## Tables and Figures
 
-> {REPLICATOR}: Insert the filled-out `package-output-map.xlsx` here (complete the column `Reproduced?`), using the VS Code Plugins [Excel to Markdown table](https://marketplace.visualstudio.com/items?itemName=csholmq.excel-to-markdown-table). Then describe in more detail the issues that may have arisen.
+| Data Preparation Program                                           | Dataset created                                | Line Number | Reproduced? |
+| ------------------------------------------------------------------ | ---------------------------------------------- | ----------- | ----------- |
+| Code/Cleaning/01_antenna_tower_griddist_mapping.R                  | Not identifiable: file contains only NUL bytes |             |             |
+| Code/Cleaning/02_gen_tower_maghrib_and_sunset_time.py              | Not identifiable: file contains only NUL bytes |             |             |
+| Code/Cleaning/03_gen_compressed_panel.py                           | Not identifiable: file contains only NUL bytes |             |             |
+| Code/Cleaning/04_gen_outage_ind.py                                 | Not identifiable: file contains only NUL bytes |             |             |
+| Code/Cleaning/05_gen_towerday_indicators_panel.py                  | Not identifiable: file contains only NUL bytes |             |             |
+| Code/Cleaning/06_gen_hash_towerday_panel.py                        | Not identifiable: file contains only NUL bytes |             |             |
+| Code/Cleaning/07_panel_gridmonth_or_districtmonth.py               | Not identifiable: file contains only NUL bytes |             |             |
+| Code/Cleaning/08_01_gen_hash_homelocations.py                      | Not identifiable: file contains only NUL bytes |             |             |
+| Code/Cleaning/08_02_gen_hash_districtmonth_continuity_ind.py       | Not identifiable: file contains only NUL bytes |             |             |
+| Code/Cleaning/08_03_panel_gridmonth_or_districtmonth_restricted.py | Not identifiable: file contains only NUL bytes |             |             |
+| Code/Cleaning/09_01_gen_hash_level_relig.py                        | Not identifiable: file contains only NUL bytes |             |             |
+| Code/Cleaning/09_02_gen_init_hash_relig.py                         | Not identifiable: file contains only NUL bytes |             |             |
+| Code/Cleaning/09_03_gen_hashqtr_panel.py                           | Not identifiable: file contains only NUL bytes |             |             |
+| Code/Cleaning/10_SIGACTS_merge_cdr.R                               | Not identifiable: file contains only NUL bytes |             |             |
+| Code/Cleaning/11_01_220805_create_master.do                        | Not identifiable: file contains only NUL bytes |             |             |
+| Code/Cleaning/11_02_220824_create_master_shortcode.do              | Not identifiable: file contains only NUL bytes |             |             |
+| Code/Cleaning/11_03_250108_update_master_cdr.do                    | Not identifiable: file contains only NUL bytes |             |             |
+| Code/Cleaning/12_240213_gen_widewheat_panel.do                     | Not identifiable: file contains only NUL bytes |             |             |
+| Code/Cleaning/13_precleaning_alltables.do                          | cdr_and_conflict_dm.dta                        | 266         |             |
+| Code/Cleaning/13_precleaning_alltables.do                          | cdr_and_climate_gm.dta                         | 530         |             |
+| Code/Cleaning/13_precleaning_alltables.do                          | cdr_and_climate_gy.dta                         | 639         |             |
+| Code/Cleaning/13_precleaning_alltables.do                          | calls_shortcode_comparison_dm.dta              | 677         |             |
+| Code/Cleaning/13_precleaning_alltables.do                          | calls_shortcode_comparison_gm.dta              | 706         |             |
+| Code/Cleaning/13_precleaning_alltables.do                          | dist_level.dta                                 | 910         |             |
+| Code/Cleaning/13_precleaning_alltables.do                          | grid_level.dta                                 | 922         |             |
 
-Examples:
-
-- Table 1: Looks the same
-- Table 2: (contains no data)
-- Table 3: Minor differences in row 5, column 3, 0.003 instead of 0.3
-
-> {REPLICATOR}: For tables, simple comparisons can be listed out as above. More complex differences can be described by using screenshots of the original table and the reproduced table, highlighting the differences.
- 
-> {REPLICATOR}: Please provide a comparison with the paper when describing that figures look different. Use a screenshot for the paper, and the graph generated by the programs for the comparison. Reference the graph generated by the programs as a local file within the repository.
-
-Example:
-
-- Figure 1: Looks the same
-- Figure 2: no program provided
-- Figure 3: Paper version looks different from the one generated by programs:
-
-::: {#fig-three layout-ncol=2}
-
-![Paper version](images/heman.png)
-
-![Replicated version](images/skeletor.png)
-
-Figure 3 [DELETE THIS FIGURE]
-
-:::
+| Figures/Tables | Code        | Line     |  			
+| --------- | --------------------------- | -------------------------------------------------- |  
+| Figure 1  | Code/Analysis/Fig1.R        | Not identifiable: file contains only NUL bytes     |  
+| Figure 2  | Code/Analysis/Fig2.R        | 114, 246                                           |  
+| Figure 3  | Code/Analysis/Fig3.R        | 119                                                |  
+| Figure 4  | Code/Analysis/Fig4.R        | 150                                                |  
+| Figure A1 | No program provided         | Not identified                                     |  
+| Figure A2 | Code/Analysis/FigA2.qmd     | 84 (synthetic tower data)                          |  
+| Figure A3 | Code/Analysis/FigA3.R       | 75                                                 |  
+| Figure A4 | Code/Analysis/FigA4.R       | 70-72                                              |  
+| Figure A5 | Code/Analysis/FigA5.R       | 219-223, 231-235                                   |  
+| Figure A6 | Code/Analysis/FigA6.R       | 125                                                |  
+| Table 1   | Code/Analysis/All_Tables.do | 145                                                |  
+| Table 2   | Code/Analysis/All_Tables.do | 203                                                |  
+| Table 3   | Code/Analysis/All_Tables.do | 291                                                |  
+| Table A1  | Code/Analysis/All_Tables.do | 333                                                |  
+| Table A2  | Code/Analysis/All_Tables.do | 432, 441, 448, 454, 460, 466, 472 (synthetic data) |  
+| Table A3  | Code/Analysis/All_Tables.do | 508 (synthetic data)                               |  
+| Table A4  | Code/Analysis/All_Tables.do | 555                                                |  
+| Table A5  | Code/Analysis/All_Tables.do | 629, 642, 650, 661                                 |  
+| Table A6  | Code/Analysis/All_Tables.do | 749, 761, 779, 796, 809, 823, 830                  |  
+| Table A7  | Code/Analysis/All_Tables.do | 859                                                |  
+| Table A8  | Code/Analysis/All_Tables.do | 940                                                |  
+| Table A9  | Code/Analysis/All_Tables.do | 996                                                |  
+| Table A10 | Code/Analysis/All_Tables.do | 1062                                               |  
+| Table A11 | Code/Analysis/All_Tables.do | 1115                                               |  
+| Table A12 | Code/Analysis/All_Tables.do | 1162                                               |  
+| Table A13 | Code/Analysis/TabA13.R      | 465 (synthetic data)                               |  
+| Table A14 | Code/Analysis/All_Tables.do | 1215                                               |  
 
 ## In-Text Numbers
 
-> {REPLICATOR}: list page and line number of in-text numbers. If ambiguous, cite the surrounding text, i.e., "the rate fell to 52% of all jobs: verified".
-
-- [ ] In-text numbers not verified.
+- [x] In-text numbers not verified.
 
 - [ ] There are no in-text numbers, or all in-text numbers stem from tables and figures.
 
 - [ ] There are in-text numbers, but they are not identified in the code
 
-- Page 21, line 5: Same
-
-## Other Issues
-
-> {REPLICATOR}: List here any other issue that was not recalled previously. Delete the entire section if no additional issues were found. Don't forget to amend the examples provided. 
-
-
-Example:
-
-- Title of the Readme does not match title of the paper. 
-
-- One or multiple scripts include hard-coded numbers whose origin is unknown.
-
-- Readme recalls scripts that are not provided in the replication package. 
-
+| Paper | In-text | code |
+|---|---|---|
+| Paper PDF p. 2: a one-SD survey religiosity increase is associated with a 27% increase in the Maghrib dip. Later text and Table A2 report 29%. | No code generates the 27% claim | N/A |
+| Paper PDF p. 9: 90% of Afghans are Sunni| No package program| N/A |
+| Paper PDF p. 20 n. 23: adult literacy rate is 43%. | No package program| N/A |
 
 # Classification
-
-> {REPLICATOR}: Make an assessment here.
->
-> Full reproduction can include a small number of apparently insignificant changes in the numbers in the table. Full reproduction also applies when changes to the programs needed to be made, but were successfully implemented.
->
-> Partial reproduction means that a significant number (>25%) of programs and/or numbers are different.
->
-> Note that if some data is confidential and not available, then a partial reproduction applies. This should be noted in the Reasons.
->
-> Note that when all data is confidential, it is unlikely that this exercise should have been attempted.
->
-> Failure to reproduce: only a small number of programs ran successfully, or only a small number of numbers were successfully generated (<25%). This also applies when all data is restricted-access and none of the **main** tables/figures are run.
 
 - [ ] full reproduction
 - [ ] full reproduction with minor issues
 - [ ] partial reproduction (see above)
-- [ ] not able to reproduce most or all of the results (reasons see above)
+- [x] not able to reproduce most or all of the results (reasons see above)
 
 ## Reason for incomplete reproducibility
-
-> {REPLICATOR}: mark the reasons here why full reproduciblity was not achieved, and enter this information in new issue on the github repo of this package. When results are fully reproduced, leave this section here, and mark "None".
 
 - [ ] None.
 - [ ] `Discrepancy in output` (either figures or numbers in tables or text differ)
@@ -422,32 +318,8 @@ Example:
 - [ ] `Code not functional` is more severe than a simple bug: it prevented the replicator from completing the reproducibility check
 - [ ] `Software not available to replicator` may happen for a variety of reasons, but in particular (a) when the software is commercial, and the replicator does not have access to a licensed copy, or (b) the software is open-source, but a specific version required to conduct the reproducibility check is not available.
 - [ ] `Insufficient time available to replicator` is applicable when (a) running the code would take weeks or more (b) running the code might take less time if sufficient compute resources were to be brought to bear, but no such resources can be accessed in a timely fashion (c) the replication package is very complex, and following all (manual and scripted) steps would take too long.
-- [ ] `Data missing` is marked when data *should* be available, but was erroneously not provided, or is not accessible via the procedures described in the replication package
-- [ ] `Data not available` is marked when data requires additional access steps, for instance purchase or application procedure. 
+- [x] `Data missing` is marked when data *should* be available, but was erroneously not provided, or is not accessible via the procedures described in the replication package
+- [x] `Data not available` is marked when data requires additional access steps, for instance purchase or application procedure. 
 - [ ] `Missing README` is marked if there is no README to guide the replicator, or the README is not in compliance with JPE requirements
 
-
 {{< include generated/report-pii.md >}}
-
-
-
-> {REPLICATOR} You are done! Time to submit your report now!
->
-> You must commit everything you want the Data Editor to be able to see to this git repository and push to the github remote. In particular, commit all files needed to compile your report, as well as the pdf version of your compiled report. 
->
-> Your commit message should reflect the state of this package; i.e. which round, whether it's complete (or not), if not, brief issue description.
-
-> {REPLICATOR} Don't forget to delete all those REPLICATOR instructions before you commit the files!!!
-
-
-> {REPLICATOR} I leave this here 👇 as a reminder for you. Please delete those commands before you commit your report:
-
-```bash
-git add package-output-map.xlsx
-git add images # for your screenshots
-git add TEMPLATE.qmd  # your edits
-git add TEMPLATE.pdf  # the compiled version of your report
-git commit -m 'first round report. code breaks. missing citations.'
-# which round is this? fill in for which_round={round1, round2, ...}
-git push origin which_round
-```
