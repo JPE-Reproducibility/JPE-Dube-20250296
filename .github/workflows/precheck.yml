@@ -2,14 +2,13 @@ name: Run Precheck
 
 on:
   push:
-    paths:
-      - '_variables.yml'
-      - 'runner_precheck.jl'
+  workflow_dispatch:
 
 jobs:
   precheck:
     runs-on: [self-hosted, macOS, ARM64]
-    if: contains(github.event.head_commit.message, '[trigger remote]')
+    if: contains(github.event.head_commit.message, '[trigger remote]') || github.event_name == 'workflow_dispatch'
+    timeout-minutes: 1440
 
     env:
       DROPBOX_DOWNLOAD_URL: ${{ secrets.DROPBOX_DOWNLOAD_URL }}
@@ -17,7 +16,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
+      - name: Fix permissions from previous run
+        run: chmod -R u+rwX . || true
+
       - name: Verify environment and packages
         run: |
           if [ -z "$JPE_DBOX_APPS" ] || [ -z "$JULIA_RUNNER_ENV" ]; then
@@ -42,7 +44,6 @@ jobs:
       
       - name: Read variables from YAML
         run: |
-          echo "=== Configuration ==="
           julia --project=$JULIA_RUNNER_ENV -e '
             using YAML
             vars = YAML.load_file("_variables.yml")
@@ -54,11 +55,43 @@ jobs:
       - name: Run precheck script
         run: julia --project=$JULIA_RUNNER_ENV runner_precheck.jl
       
+      - name: Cap large generated files
+        run: |
+          MAX_BYTES=$((5 * 1024 * 1024))
+          RUN_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          mkdir -p /tmp/large-generated
+          FOUND=false
+
+          for f in generated/*.md; do
+            [ -f "$f" ] || continue
+            size=$(wc -c < "$f")
+            if [ "$size" -gt "$MAX_BYTES" ]; then
+              lines=$(wc -l < "$f")
+              size_mb=$(awk "BEGIN {printf \"%.1f\", $size/1048576}")
+              fname=$(basename "$f")
+              cp "$f" "/tmp/large-generated/$fname"
+              printf '> **Note**: This list contains %s entries (%s MB) — too large to embed in the report.\n> The full list is available as a GitHub Actions artifact for this run:\n> <%s>\n' \
+                "$lines" "$size_mb" "$RUN_URL" > "$f"
+              echo "Capped $fname (${size_mb} MB, ${lines} lines)"
+              FOUND=true
+            fi
+          done
+          echo "LARGE_GENERATED_EXISTS=$FOUND" >> $GITHUB_ENV
+
+      - name: Upload large generated files as artifacts
+        if: env.LARGE_GENERATED_EXISTS == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: large-generated-files
+          path: /tmp/large-generated/
+          retention-days: 90
+
       - name: Commit and push results
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
           git add .
+          [ -s generated/force-add-files.txt ] && xargs git add -f < generated/force-add-files.txt
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else

@@ -105,7 +105,8 @@ p = ggplot() +
 
 p2 = p + geom_sf(data = dist_ethn, aes(colour = maj_ethn), linewidth = 0.5) +
   scale_colour_manual(values = "yellow", labels = "Pashto", name = " ") +
-  theme(legend.key = element_rect(fill = "grey70")) +
+  # colour = NA set explicitly
+  theme(legend.key = element_rect(fill = "grey70", colour = NA)) +
   guides(colour = guide_legend(order = 1), fill = guide_colorbar(order = 2)) +
   # dari line
   annotation_custom(

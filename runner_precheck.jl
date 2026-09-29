@@ -1,20 +1,40 @@
 using YAML
 using PackageScanner
 
+function rm_git(extract_dir)
+    for (root, dirs, files) in walkdir(extract_dir)
+        if ".git" in dirs
+            git_path = joinpath(root, ".git")
+            @info "Removing git repository: $git_path"
+            rm(git_path, recursive=true, force=true)
+            filter!(d -> d != ".git", dirs)
+            return 0
+        end
+    end
+end
+
 # Read configuration
 vars = YAML.load_file(joinpath(ENV["GITHUB_WORKSPACE"], "_variables.yml"))
 @info "Configuration loaded" vars
 
 dest_path = joinpath(ENV["GITHUB_WORKSPACE"], "replication-package")
 
-# ── Remote path: download via public Dropbox link ─────────────────────
-url = get(ENV, "DROPBOX_DOWNLOAD_URL", nothing)
+# ── Skip fetch entirely if package is already present locally ─────────
+already_have_package = isdir(dest_path) && !isempty(readdir(dest_path))
 
-downloaded_ok = if !isnothing(url)
+# ── Remote path: download via public Dropbox link ─────────────────────
+url = let u = get(ENV, "DROPBOX_DOWNLOAD_URL", nothing)
+    (isnothing(u) || isempty(u)) ? nothing : u
+end
+
+downloaded_ok = if already_have_package
+    @info "Package already present at $dest_path — skipping download/copy"
+    true
+elseif !isnothing(url)
     @info "Downloading package from secret Dropbox link..."
     t0 = time()
     try
-        run(`curl -fsSL -o package.zip $url`)
+        run(`curl -fsSL --retry 5 --retry-delay 10 --retry-all-errors --connect-timeout 30 -C - -o package.zip $url`)
         @info "Download complete in $(round(time()-t0, digits=1))s"
         true
     catch e
@@ -54,23 +74,31 @@ if downloaded_ok && isfile("package.zip")
         isfile(f) && endswith(lowercase(f), ".zip")
     end
 
-    if isempty(candidates)
-        error("No ZIP file found inside Dropbox folder archive")
-    end
-
-    @info "Found $(length(candidates)) ZIP(s) to extract" candidates
     isdir(dest_path) && rm(dest_path; recursive=true, force=true)
     mkpath(dest_path)
 
-    for pkg_zip in candidates
-        @info "Unzipping $pkg_zip..."
-        try
-            run(`unzip -oq $pkg_zip -d $dest_path`)
-            if isdir(dest_path)
-                rm_git(dest_path)
+    if isempty(candidates)
+        # No nested ZIP — the author's Dropbox folder contained the
+        # replication package's files/subfolders directly (not a .zip),
+        # so the extracted tmp_dir already *is* the package.
+        @info "No nested ZIP found — using extracted folder contents directly as the package"
+        for f in readdir(tmp_dir; join=true)
+            cp(f, joinpath(dest_path, basename(f)); force=true)
+        end
+        rm_git(dest_path)
+    else
+        @info "Found $(length(candidates)) ZIP(s) to extract" candidates
+
+        for pkg_zip in candidates
+            @info "Unzipping $pkg_zip..."
+            try
+                run(`unzip -oq $pkg_zip -d $dest_path`)
+                if isdir(dest_path)
+                    rm_git(dest_path)
+                end
+            catch e
+                @warn "unzip of $pkg_zip exited non-zero" exception=e
             end
-        catch e
-            @warn "unzip of $pkg_zip exited non-zero" exception=e
         end
     end
 
@@ -83,25 +111,69 @@ if !isdir(dest_path)
 end
 
 # ── PackageScanner precheck ────────────────────────────────────────────
-pkg_size     = vars["package_size_gb"]
-max_pkg_size = vars["package_max_pkg_size_gb"]
-max_file_size = vars["package_max_file_size_gb"]
+if true
+    pkg_size     = vars["package_size_gb"]
+    max_pkg_size = vars["package_max_pkg_size_gb"]
+    max_file_size = vars["package_max_file_size_gb"]
 
-if pkg_size > max_pkg_size
-    @info "Package >$(max_pkg_size) GB — using partial extraction mode"
-    pkg_dir, manifest = PackageScanner.prepare_package_for_precheck(
-        dest_path, size_threshold_gb=max_file_size, interactive=false)
-    PackageScanner.precheck_package(pkg_dir, pre_manifest=manifest,
-                                    no_data_scan=["__MACOSX", "renv"])
-else
-    @info "Unzipping files in $dest_path"
-    try
-        zips = PackageScanner.read_and_unzip_directory(dest_path)
-        @info "Unzipped $(length(zips)) file(s)"
-    catch e
-        @warn "Unzip had issues (may be okay)" exception=e
+    if pkg_size > max_pkg_size
+        @info "Package >$(max_pkg_size) GB — using partial extraction mode"
+        pkg_dir, manifest = PackageScanner.prepare_package_for_precheck(
+            dest_path, size_threshold_gb=max_file_size, interactive=false)
+        PackageScanner.precheck_package(pkg_dir, pre_manifest=manifest,
+                                        no_data_scan=["__MACOSX", "renv"])
+    else
+        @info "Unzipping files in $dest_path"
+        try
+            zips = PackageScanner.read_and_unzip_directory(dest_path)
+            @info "Unzipped $(length(zips)) file(s)"
+        catch e
+            @warn "Unzip had issues (may be okay)" exception=e
+        end
+        @info "Running precheck on $dest_path"
+        PackageScanner.precheck_package(dest_path, no_data_scan=["__MACOSX", "renv"])
+        @info "✓ Precheck complete"
     end
-    @info "Running precheck on $dest_path"
-    PackageScanner.precheck_package(dest_path, no_data_scan=["__MACOSX", "renv"])
-    @info "✓ Precheck complete"
+
+    # ── Force-track classified code files even under `data/` dirs ─────
+    # JPEtemplate's .gitignore excludes **/data/*, which can hide
+    # genuine author code (already flagged as code by classify_files)
+    # from git. List those paths, relative to the repo root, so a
+    # later `git add -f` step can force-track them.
+    program_files_txt = joinpath(ENV["GITHUB_WORKSPACE"], "generated", "program-files.txt")
+    if isfile(program_files_txt)
+        force_add_exclude = vcat(["__MACOSX", "renv"], ["__pycache__"])
+        rels = String[]
+        for line in eachline(program_files_txt)
+            isempty(strip(line)) && continue
+            if !any(occursin(pat, line) for pat in force_add_exclude)
+                # These files have never been committed before (that's
+                # the whole reason they need force-adding), so their
+                # content has never passed through a secret check.
+                # Redact in place before it's staged -- same
+                # SECRET_PATTERNS the secrets report already scanned
+                # this content with, so a redaction here always agrees
+                # with what report-secrets.md flagged.
+                try
+                    original = read(line, String)
+                    redacted = PackageScanner.redact_secrets(original)
+                    if redacted != original
+                        write(line, redacted)
+                        @warn "Redacted possible secret(s) in $line before force-adding to git"
+                    end
+                catch e
+                    @warn "Could not check $line for secrets before force-add — leaving as-is" exception=e
+                end
+                push!(rels, relpath(line, ENV["GITHUB_WORKSPACE"]))
+            end
+        end
+        open(joinpath(ENV["GITHUB_WORKSPACE"], "generated", "force-add-files.txt"), "w") do fio
+            for rel in rels
+                println(fio, rel)
+            end
+        end
+        @info "✓ Wrote $(length(rels)) path(s) to generated/force-add-files.txt"
+    end
+else
+    @info "run_checks=false — package fetched, skipping PackageScanner precheck"
 end

@@ -68,7 +68,8 @@ if $install_package == 1 {
 * ===================================================================== *
 
 // should modify the path below to point to the folder on your local machine.
-global root "<PATH_TO_REPLICATION_PACKAGE>"  
+global root "<PATH_TO_REPLICATION_PACKAGE>"
+  
 global datadir "${root}/Data/tables_data"
 global outputdir  "${root}/Output/Tables"
 

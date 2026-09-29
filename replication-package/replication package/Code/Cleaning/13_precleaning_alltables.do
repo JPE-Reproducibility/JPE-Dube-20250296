@@ -34,7 +34,11 @@ pause off
 set matsize 11000
 cap log close 
 
-global maindir "~/Dube_UC Dropbox/Fengzhe Liu/Afghanistan Climate Conflict"
+* This script was run on the authors' machines over the project folder holding
+* the confidential source data, which is not part of this package. The paths
+* below therefore point outside the replication package and are given for
+* documentation only.
+global maindir "<PATH_TO_PROJECT_ROOT>"
 cd "$maindir"
 global datadir "${maindir}/Data"
 

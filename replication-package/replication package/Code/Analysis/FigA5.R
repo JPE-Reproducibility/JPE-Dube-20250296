@@ -182,7 +182,10 @@ for (i in seq_along(violence_types)) {
   # plot with fixed color scale
   plot_heatmap <- ggplot() +
     geom_sf(data = heatmap_df, aes(fill = log_count), color = NA) +
-    geom_sf(data = districts, fill = NA, color = "black", size = 0.02) +
+    # Border width must be set with linewidth, not size: ggplot2 versions
+    # differ in whether size is applied to sf borders at all. 0.2 reproduces
+    # the width used for the published figure.
+    geom_sf(data = districts, fill = NA, color = "black", linewidth = 0.2) +
     scale_fill_gradientn(
       colors = c("#FFFFFF", "#FFE699", "#FFA500", "#FF6600", "#990000"),
       values = scales::rescale(c(0, 0.5, 1.5, 3, global_max), from = c(0, global_max)),

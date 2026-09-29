@@ -27,6 +27,11 @@ library('lubridate')
 library('grid')
 library('this.path')
 
+# Axis labels below use %b and %a, which are locale-dependent. Force the C
+# locale so month and weekday abbreviations render in English regardless of
+# the machine's system language.
+Sys.setlocale("LC_TIME", "C")
+
 rootdir <- dirname(dirname(this.path::this.dir()))
 
 # Paths

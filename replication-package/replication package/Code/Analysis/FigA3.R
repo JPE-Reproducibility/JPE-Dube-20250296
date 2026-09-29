@@ -32,6 +32,11 @@ library('lubridate')
 library('tidyr')
 library('this.path')
 
+# Axis labels below use %b, which is locale-dependent. Force the C locale so
+# month abbreviations render in English regardless of the machine's system
+# language.
+Sys.setlocale("LC_TIME", "C")
+
 maindir <- dirname(dirname(this.path::this.dir()))
 
 

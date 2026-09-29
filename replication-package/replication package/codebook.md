@@ -1,6 +1,6 @@
 # Codebook
 
-This codebook documents all data files in the replication package. Files are organized by subdirectory. Synthetic files (fabricated placeholders for confidential data) are marked **[SYNTHETIC]**.
+This codebook documents all data files in the replication package. Synthetic files (fabricated placeholders for confidential data) are marked **[SYNTHETIC]**.
 
 ---
 
@@ -128,6 +128,9 @@ This codebook documents all data files in the replication package. Files are org
 | `spring_vpm_prev12_noram` | Prior year growing season Maghrib dip excluding Ramadan |
 | `harvest_vpm_prev12_noram` | Prior year harvest season Maghrib dip excluding Ramadan |
 | `postharvest_vpm_prev12_noram` | Prior year post-harvest Maghrib dip excluding Ramadan |
+| `reg_sample` | Indicator: observation is in the Table 3 baseline estimation sample (all seasonal Maghrib dip and SPEI values non-missing) |
+| `reg_sample2` | Indicator: Table 3 estimation sample additionally requiring non-missing prior-year seasonal Maghrib dip |
+| `reg_sample3` | Indicator: Table 3 estimation sample for the excluding-Ramadan specifications |
 
 
 ---
@@ -142,6 +145,7 @@ This codebook documents all data files in the replication package. Files are org
 | `distid` | District identifier |
 | `variable_maghrib_dip_shortcode` | Transaction type indicator (0 = non-shortcode calls; 1 = shortcode calls) |
 | `value` | Maghrib dip value for this district-month-type group |
+| `n_in_group` | Working counter from the cleaning pipeline; equals 2 for all retained rows (district-months where both regular and shortcode dips are observed) |
 
 
 ---
@@ -196,6 +200,8 @@ This codebook documents all data files in the replication package. Files are org
 | `grid_provid` | Province ID |
 | `vpm_before_30min` | Average call volume in 30 min before Maghrib |
 | `vpm_after_30min` | Average call volume in 30 min after Maghrib |
+| `cell_uppsala_0312` | Indicator: grid cell matched to Uppsala conflict events, 2003–2012. Not used in the paper |
+| `cell_uppsala_0320` | Indicator: grid cell matched to Uppsala conflict events, 2003–2020. Not used in the paper |
 | `vpm_diff_avg_denom` | Average Maghrib dip over sample period |
 | `vpm_diff_avg_denom_zsc` | Z-score of Maghrib dip (standardized across districts) |
 | `vpm_diff_avg_denom_sc` | Average Maghrib dip (shortcode calls) |
@@ -277,21 +283,72 @@ These files substitute for confidential data. All values are fabricated; estimat
 | `readwrite` | Indicator: respondent can read and write (fabricated) |
 | `agri_land` | Indicator: respondent owns agricultural land (fabricated) |
 
+
+
 ---
 
 ## 3. Data/raw_CDR/ — Synthetic Raw CDR Files **[SYNTHETIC]**
 
-Four 5-observation fabricated files illustrating the column structure of the raw CDR inputs. All subscriber hashes and tower IDs are fabricated. These cannot be used to run the cleaning pipeline.
+**Used by:** `Code/Cleaning/03_gen_compressed_panel.py`
 
-Each file has the same three columns:
+Four 5-observation fabricated files illustrating the column structure of the raw CDR inputs — one each for phone calls, SMS, shortcode calls, and data usage. 
+
+Note that the fields below are the raw, original variable names as provided to us directly by the phone company. These are not derived variables we constructed. But all subscriber hashes, timestamps, and antenna IDs are fabricated. 
+
+---
+
+### 3.1 `CDR_phone_call_raw_synthetic.csv` **[SYNTHETIC]**
+
+**Illustrates:** Raw phone call CDR (one row per call)
 
 | Variable | Description |
 |----------|-------------|
-| `phoneHash1` | Anonymized subscriber identifier (hashed; fabricated) |
-| `datetime` | Timestamp of the transaction (fabricated) |
-| `antenna_id` | ID of the cell tower that handled the transaction (fabricated) |
+| `phoneHash1` | Anonymized caller identifier (hashed) |
+| `datetime` | Timestamp of the call (`YYYY-MM-DD HH:MM:SS`); split by the pipeline into year-month, date, and time-of-day |
+| `antenna_id` | ID of the antenna that handled the call; merged to tower clusters and grid cells |
 
-Files: `CDR_phone_call_raw_synthetic.csv`, `CDR_sms_raw_synthetic.csv`, `CDR_shortcode_raw_synthetic.csv`, `CDR_data_usage_raw_synthetic.csv`
+
+---
+
+### 3.2 `CDR_sms_raw_synthetic.csv` **[SYNTHETIC]**
+
+**Illustrates:** Raw SMS CDR (one row per SMS)
+
+The SMS files carry no single antenna column. The operator instead supplies three modal-antenna columns, and the pipeline takes the finest one available for each record (hourly, else daily, else monthly).
+
+| Variable | Description |
+|----------|-------------|
+| `phoneHash1` | Anonymized sender identifier (hashed) |
+| `datetime` | Timestamp of the SMS (`YYYY-MM-DD HH:MM:SS`); split by the pipeline into year-month, date, and time-of-day |
+| `hourly_modal_antenna` | Modal antenna ID for the subscriber within the hour; used as the antenna assignment when non-missing |
+| `daily_modal_antenna` | Modal antenna ID within the day; used when `hourly_modal_antenna` is missing |
+| `monthly_modal_antenna` | Modal antenna ID within the month; used when both of the above are missing |
+
+---
+
+### 3.3 `CDR_shortcode_raw_synthetic.csv` **[SYNTHETIC]**
+
+**Illustrates:** Raw shortcode call CDR (one row per shortcode call)
+
+| Variable | Description |
+|----------|-------------|
+| `phoneHash1` | Anonymized caller identifier (hashed) |
+| `datetime` | Timestamp of the call (`YYYY-MM-DD HH:MM:SS`); split by the pipeline into year-month, date, and time-of-day |
+| `callingcellid` | ID of the antenna that handled the call (the operator's name for the field that is called `antenna_id` in the other transaction types) |
+
+
+---
+
+### 3.4 `CDR_data_usage_raw_synthetic.csv` **[SYNTHETIC]**
+
+**Illustrates:** Raw mobile data usage CDR (one row per data session)
+
+| Variable | Description |
+|----------|-------------|
+| `phoneHash1` | Anonymized subscriber identifier (hashed) |
+| `datetime` | Timestamp of the data session (`YYYY-MM-DD HH:MM:SS`); split by the pipeline into year-month, date, and time-of-day |
+| `antenna_id` | ID of the antenna that handled the session |
+
 
 ---
 
@@ -460,12 +517,59 @@ Files: `CDR_phone_call_raw_synthetic.csv`, `CDR_sms_raw_synthetic.csv`, `CDR_sho
 
 ---
 
+### 4.12 `country_shp/gadm36_AFG_0.shp` (+ `.dbf`, `.prj`, `.shx`, `.cpg`)
+
+**Used by:** Figure A2 (`FigA2.qmd`); `Code/Cleaning/01_antenna_tower_griddist_mapping.R`  
+**CRS:** EPSG:4326 (WGS 84)  
+**Description:** Afghanistan country boundary polygon. One row. Used to draw the outer border of Afghanistan on maps.
+
+| Field | Description |
+|-------|-------------|
+| `GID_0` | 3-letter country code (`AFG`) |
+| `NAME_0` | Country name (`Afghanistan`) |
+| `geometry` | Country boundary polygon |
+
+---
+
+### 4.13 `district_shp/district398.shp` (+ `.dbf`, `.prj`, `.shx`, `.sbn`, `.sbx`)
+
+**Used by:** Figure 4 (`Fig4.R`); Figure A2 (`FigA2.qmd`); Figure A5 (`FigA5.R`); `Code/Cleaning/01_antenna_tower_griddist_mapping.R`  
+**CRS:** EPSG:4326 (WGS 84)  
+**Description:** Afghanistan district boundary polygons for 398 districts. Used as the district-level geographic unit for all maps, and in the cleaning pipeline to assign antennas and grid cells to districts.
+
+| Field | Description |
+|-------|-------------|
+| `OBJECTID` | Sequential row identifier |
+| `PROV_34_NA`  | Province name |
+| `DIST_34_NA` | District name |
+| `DISTID` | Numeric district identifier |
+| `PROVID` | Numeric province identifier |
+| `geometry` | District boundary polygon |
+
+---
+
+### 4.14 `rasterwithmask.nc`
+
+**Used by:** Figure A6 (`FigA6.R`); `Code/Cleaning/01_antenna_tower_griddist_mapping.R`  
+**CRS:** WGS 84 (PROJ.4: `+proj=longlat +datum=WGS84`)  
+**Description:** NetCDF raster defining the grid cell geometry used throughout the analysis. The grid covers Afghanistan with 145 columns (longitudes 60.5°–74.9°E) and 92 rows (latitudes 29.4°–38.5°N). Each cell is **0.1° × 0.1°** in geographic degrees. The `layer` variable is a binary land mask (value = 1 inside Afghanistan). Used in the cleaning pipeline to assign antennas and CDR observations to grid cells, and in `FigA6.R` to reconstruct grid polygons for the SPEI map.
+
+| Variable | Shape | Description |
+|----------|-------|-------------|
+| `longitude` | (145,) | 1-D array of grid cell center longitudes (degrees east); one value per column of the grid |
+| `latitude` | (92,) | 1-D array of grid cell center latitudes (degrees north); one value per row of the grid |
+| `layer` | (92, 145) | 2-D land mask matrix (one value per grid cell): 1 = inside Afghanistan |
+
+---
+
 ## 5. Data/figures_data/synthetic/ — Synthetic Antenna File **[SYNTHETIC]**
 
 ### 5.1 `cell_lookup_antenna_synthetic.csv` **[SYNTHETIC]**
 
-**Used by:** Figure A2 (`FigA2.R`)  
+**Used by:** Figure A2 (`FigA2.qmd`)  
 **Description:** Five fabricated cell tower locations substituting for the confidential antenna geolocation file. Output map is a meaningless placeholder.
+
+Note that the fields below are the raw, original variable names as provided to us directly by the phone company. These are not derived variables we constructed. But all antenna identifiers, site codes, and coordinates are fabricated.
 
 | Variable | Description |
 |----------|-------------|
@@ -477,4 +581,3 @@ Files: `CDR_phone_call_raw_synthetic.csv`, `CDR_sms_raw_synthetic.csv`, `CDR_sho
 | `province_id` | Province identifier (fabricated) |
 | `district` | District name  |
 | `district_id` | District identifier (fabricated) |
-
